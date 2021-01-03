@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Attendence; 
+use App\Entity\Company;  
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,14 +11,14 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
-class AttendanceController extends AbstractController
+class CompanyController extends AbstractController
 {
     /**
-     * @Route("/attendance", name="attendance")
+     * @Route("/company", name="company")
      */
     public function index(): JsonResponse
     {
-        $employeesAttendance = $this->getDoctrine()->getRepository(Attendence::class)->findAll();
+        $employees = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $encoder = new JsonEncoder();
         $defaultContext = [
             AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
@@ -28,22 +28,22 @@ class AttendanceController extends AbstractController
         $normalizer =   new ObjectNormalizer(null, null, null, null, null, null, $defaultContext);
         
         $serializer = new Serializer([$normalizer], [$encoder]);
-        $attendance_json = $serializer->serialize($employeesAttendance, 'json');
-        return new JsonResponse($attendance_json, 200, array(), true);  
+        $employees_json = $serializer->serialize($employees, 'json');
+        return new JsonResponse($employees_json, 200, array(), true);  
     }
 
     /**
-     * @Route("/attendance/{id}", name="get_attendance")
+     * @Route("/company/{id}", name="get_company")
      */
-    public function getAttendance(int $id): JsonResponse
+    public function getCompany(int $id): JsonResponse
     {
-        $attendance = $this->getDoctrine()
-            ->getRepository(Attendence::class)
+        $company = $this->getDoctrine()
+            ->getRepository(Company::class)
             ->find($id);
         
        
 
-        if (!$attendance) {
+        if (!$company) {
             throw $this->createNotFoundException(
                 'No company found for id '.$id
             );
