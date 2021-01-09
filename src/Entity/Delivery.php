@@ -46,7 +46,7 @@ class Delivery
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="deliveries")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $company_id;
+    private $company;
 
     public function getId(): ?int
     {
@@ -113,14 +113,14 @@ class Delivery
         return $this;
     }
 
-    public function getCompanyId(): ?Company
+    public function getCompany(): ?Company
     {
-        return $this->company_id;
+        return $this->company;
     }
 
-    public function setCompanyId(?Company $company_id): self
+    public function setCompany(?Company $company): self
     {
-        $this->company_id = $company_id;
+        $this->company = $company;
 
         return $this;
     }

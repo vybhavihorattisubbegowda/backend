@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Collection; 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,12 +23,7 @@ class Company
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $name;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Address::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $address_id;
+ 
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -36,15 +31,19 @@ class Company
     private $company_type;
 
     /**
-     * @ORM\OneToMany(targetEntity=Delivery::class, mappedBy="company_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Delivery::class, mappedBy="company")
      */
     private $deliveries;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Address::class)
+     */
+    private $address;
 
     public function __construct()
     {
         $this->deliveries = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -64,17 +63,7 @@ class Company
         return $this;
     }
 
-    public function getAddressId(): ?Address
-    {
-        return $this->address_id;
-    }
-
-    public function setAddressId(Address $address_id): self
-    {
-        $this->address_id = $address_id;
-
-        return $this;
-    }
+    
 
     public function getCompanyType(): ?string
     {
@@ -100,7 +89,7 @@ class Company
     {
         if (!$this->deliveries->contains($delivery)) {
             $this->deliveries[] = $delivery;
-            $delivery->setCompanyId($this);
+            $delivery->setCompany($this);
         }
 
         return $this;
@@ -110,11 +99,24 @@ class Company
     {
         if ($this->deliveries->removeElement($delivery)) {
             // set the owning side to null (unless already changed)
-            if ($delivery->getCompanyId() === $this) {
-                $delivery->setCompanyId(null);
+            if ($delivery->getCompany() === $this) {
+                $delivery->setCompany(null);
             }
         }
 
         return $this;
     }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+ 
 }

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20201220112434 extends AbstractMigration
+final class Version20210109121241 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,13 +20,16 @@ final class Version20201220112434 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE attendence (id INT AUTO_INCREMENT NOT NULL, mitarbeiter_id_id INT NOT NULL, date DATETIME NOT NULL, status VARCHAR(50) NOT NULL, INDEX IDX_E2819AC6C9C1579C (mitarbeiter_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE attendence ADD CONSTRAINT FK_E2819AC6C9C1579C FOREIGN KEY (mitarbeiter_id_id) REFERENCES mitarbeiter (id)');
+        $this->addSql('ALTER TABLE company ADD address_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE company ADD CONSTRAINT FK_4FBF094FF5B7AF75 FOREIGN KEY (address_id) REFERENCES address (id)');
+        $this->addSql('CREATE INDEX IDX_4FBF094FF5B7AF75 ON company (address_id)');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE attendence');
+        $this->addSql('ALTER TABLE company DROP FOREIGN KEY FK_4FBF094FF5B7AF75');
+        $this->addSql('DROP INDEX IDX_4FBF094FF5B7AF75 ON company');
+        $this->addSql('ALTER TABLE company DROP address_id');
     }
 }

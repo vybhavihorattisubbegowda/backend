@@ -39,6 +39,11 @@ class Mitarbeiter
      */
     private $attendences;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $passwort;
+
     public function __construct()
     {
         $this->attendences = new ArrayCollection();
@@ -111,6 +116,18 @@ class Mitarbeiter
                 $attendence->setMitarbeiterId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPasswort(): ?string
+    {
+        return $this->passwort;
+    }
+
+    public function setPasswort(string $passwort): self
+    {
+        $this->passwort = $passwort;
 
         return $this;
     }

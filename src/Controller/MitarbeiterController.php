@@ -4,17 +4,22 @@ namespace App\Controller;
 
 use App\Entity\Mitarbeiter;  
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request; 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Serializer; 
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class MitarbeiterController extends AbstractController
 {
     /**
-     * @Route("/mitarbeiter", name="mitarbeiter")
+     * Lists all employees.
+     * @Rest\Get("/employees")
+     * 
+     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -34,7 +39,10 @@ class MitarbeiterController extends AbstractController
     }
 
      /**
-     * @Route("/mitarbeiter/{id}", name="get_mitarbeiter")
+     * Lists all employees.
+     * @Rest\Get("/employees/{id}")
+     * 
+     * @return JsonResponse
      */
     public function getMitarbeiter(int $id): JsonResponse
     {
@@ -63,11 +71,28 @@ class MitarbeiterController extends AbstractController
         
         return new JsonResponse($employee_json, 200, array(), true);
         //return $this->json($employee);
-        //return new Response('Check out this great product: '.$product->getName());
-        
-        
+        //return new Response('Check out this great product: '.$product->getName()); 
+    }
 
-       
+    /**
+     * Create employee.
+     * @Rest\Post("/employees")
+     * 
+     * @return JsonResponse
+     */
+    public function postMovieAction(Request $request){
+        $mitarbeiter = new Mitarbeiter(); 
+        $data = json_decode($request->getContent(),true); 
+
+        $mitarbeiter->setNachname($data["lastName"]);
+        $mitarbeiter->setVorname($data["firstName"]);
+        $mitarbeiter->setEmail($data["email"]);
+        $mitarbeiter->setPasswort($data["password"]);
+
+        $em=$this->getDoctrine()->getManager();
+        $em->persist($mitarbeiter);
+        $em->flush();  
+        return new JsonResponse("Created", 201, array(), true);
     }
     
 }

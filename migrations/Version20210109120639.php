@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20201221150155 extends AbstractMigration
+final class Version20210109120639 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,13 +20,12 @@ final class Version20201221150155 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE company (id INT AUTO_INCREMENT NOT NULL, address_id_id INT NOT NULL, name VARCHAR(50) DEFAULT NULL, company_type VARCHAR(50) DEFAULT NULL, UNIQUE INDEX UNIQ_4FBF094F48E1E977 (address_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE company ADD CONSTRAINT FK_4FBF094F48E1E977 FOREIGN KEY (address_id_id) REFERENCES address (id)');
+        $this->addSql('CREATE TABLE delivery (id INT AUTO_INCREMENT NOT NULL, date VARCHAR(50) DEFAULT NULL, time VARCHAR(50) DEFAULT NULL, delivery_nr VARCHAR(50) DEFAULT NULL, pallets INT DEFAULT NULL, storage_area INT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE company');
+        $this->addSql('DROP TABLE delivery');
     }
 }
