@@ -17,7 +17,7 @@ class MitarbeiterController extends AbstractController
 {
     /**
      * Lists all employees.
-     * @Rest\Get("/employees")
+     * @Rest\Get("/mitarbeiter")
      * 
      * @return JsonResponse
      */
@@ -35,12 +35,12 @@ class MitarbeiterController extends AbstractController
        
        $serializer = new Serializer([$normalizer], [$encoder]);
        $employees_json = $serializer->serialize($employees, 'json');
-       return new JsonResponse($employees_json, 200, array(), true);
+       return new JsonResponse($employees_json, 200, array(), true);//returns new object of Json
     }
 
      /**
      * Lists all employees.
-     * @Rest\Get("/employees/{id}")
+     * @Rest\Get("/mitarbeiter/{id}")
      * 
      * @return JsonResponse
      */
@@ -76,14 +76,16 @@ class MitarbeiterController extends AbstractController
 
     /**
      * Create employee.
-     * @Rest\Post("/employees")
+     * @Rest\Post("/mitarbeiter")
      * 
      * @return JsonResponse
      */
-    public function postMovieAction(Request $request){
-        $mitarbeiter = new Mitarbeiter(); 
-        $data = json_decode($request->getContent(),true); 
-
+    //$request is HTTP Request - POST   
+     public function postMitarbeiterAction(Request $request){//input is a mitarbeiter details as Json 
+        
+        $data = json_decode($request->getContent(),true);//extracting details from object
+        
+        $mitarbeiter = new Mitarbeiter();//Entity class constructor 
         $mitarbeiter->setNachname($data["lastName"]);
         $mitarbeiter->setVorname($data["firstName"]);
         $mitarbeiter->setEmail($data["email"]);
