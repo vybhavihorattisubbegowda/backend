@@ -19,6 +19,31 @@ class TimesheetRepository extends ServiceEntityRepository
         parent::__construct($registry, Timesheet::class);
     }
 
+    
+    /**
+     * @return array[]
+     */
+    public function getTimsheetData($mitarbeiter_id): array
+    {
+        //gets Database connection
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '	
+        SELECT "Kommen" as title, t.id as id,  CONCAT(str_to_date(a.date, "%Y-%m-%d"), " ",  t.check_in) as start, CONCAT(str_to_date(a.date, "%Y-%m-%d"), " ",  AddTime(t.check_in, "00:30")) as end
+        FROM timesheet t, attendence a, mitarbeiter m
+        where a.id = t.atendance_id_id and m.id = a.mitarbeiter_id_id AND m.id = :mitarbeiter_id
+        union
+        SELECT  "Gehen" as title, t.id as id,  CONCAT(str_to_date(a.date, "%Y-%m-%d"), " ",  t.check_out)as start, CONCAT(str_to_date(a.date, "%Y-%m-%d"), " ",  AddTime(t.check_out, "00:30")) as end
+        FROM timesheet t, attendence a, mitarbeiter m
+        where a.id = t.atendance_id_id and m.id = a.mitarbeiter_id_id AND m.id = :mitarbeiter_id
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['mitarbeiter_id' => $mitarbeiter_id]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Timesheet[] Returns an array of Timesheet objects
     //  */

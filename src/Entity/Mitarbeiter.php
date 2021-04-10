@@ -35,7 +35,7 @@ class Mitarbeiter
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity=Attendence::class, mappedBy="mitarbeiter_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Attendence::class, mappedBy="mitarbeiter_id", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $attendences;
 
@@ -43,6 +43,16 @@ class Mitarbeiter
      * @ORM\Column(type="string", length=255)
      */
     private $passwort;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $rolle;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $rfid_nr;
 
     public function __construct()
     {
@@ -53,7 +63,7 @@ class Mitarbeiter
     {
         return $this->id;
     }
-
+  
     public function getNachname(): ?string
     {
         return $this->nachname;
@@ -111,7 +121,7 @@ class Mitarbeiter
     public function removeAttendence(Attendence $attendence): self
     {
         if ($this->attendences->removeElement($attendence)) {
-            // set the owning side to null (unless already changed)
+            // set the owning side null (unless already changed)
             if ($attendence->getMitarbeiterId() === $this) {
                 $attendence->setMitarbeiterId(null);
             }
@@ -128,6 +138,30 @@ class Mitarbeiter
     public function setPasswort(string $passwort): self
     {
         $this->passwort = $passwort;
+
+        return $this;
+    }
+
+    public function getRolle(): ?string
+    {
+        return $this->rolle;
+    }
+
+    public function setRolle(string $rolle): self
+    {
+        $this->rolle = $rolle;
+
+        return $this;
+    }
+
+    public function getRfidNr(): ?string
+    {
+        return $this->rfid_nr;
+    }
+
+    public function setRfidNr(string $rfid_nr): self
+    {
+        $this->rfid_nr = $rfid_nr;
 
         return $this;
     }

@@ -19,6 +19,57 @@ class MitarbeiterRepository extends ServiceEntityRepository
         parent::__construct($registry, Mitarbeiter::class);
     }
 
+    /**
+     * @return array[]
+     */
+    public function getEmployees(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT *
+        FROM `mitarbeiter`';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        // returns an array of arrays (returns array of objects(object means one entire row of SQL Table))
+        return $stmt->fetchAllAssociative();
+    }
+
+
+    /**
+     * @return array[]
+     */
+    public function login($email, $password): array
+    {
+
+        $qb = $this->createQueryBuilder('p')
+            ->select(array('p.vorname, p.nachname, p.email'))
+            ->where('p.email = :email')
+            ->andWhere('p.passwort = :password')
+            ->setParameters(array('email' => $email, 'password' => $password));
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
+
+   
+    public function updatePassword($email, $password)
+    {
+        
+        //gets Database connection
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        UPDATE mitarbeiter
+        SET passwort = :password
+        WHERE email = :email';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['password' => $password, 'email'=>$email]);
+    }
+
+
     // /**
     //  * @return Mitarbeiter[] Returns an array of Mitarbeiter objects
     //  */

@@ -32,4 +32,14 @@ class OrderController extends AbstractController
         $orders_json = $serializer->serialize($orders, 'json');
         return new JsonResponse($orders_json, 200, array(), true); 
     }
+
+    /**
+     * @Route("/orders/summary", name="summary")
+     */
+    public function summary(): JsonResponse
+    {
+        $order_summary = $this->getDoctrine()->getRepository(Orders::class)->getOrderSummary();
+        
+        return $this->json($order_summary); 
+    }
 }

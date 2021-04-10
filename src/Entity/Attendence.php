@@ -25,20 +25,20 @@ class Attendence
     private $date;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $status;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Mitarbeiter::class, inversedBy="attendences")
      * @ORM\JoinColumn(nullable=false)
      */
     private $mitarbeiter_id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Timesheet::class, mappedBy="atendance_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Timesheet::class, mappedBy="atendance_id", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $timesheets;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Status::class)
+     */
+    private $status;
 
     public function __construct()
     {
@@ -62,27 +62,20 @@ class Attendence
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getMitarbeiterId(): ?Mitarbeiter
     {
         return $this->mitarbeiter_id;
     }
-
+    //data type is class so, the input must contain all class attribute's values
+    //all mandatory attribute'values must be sent and optional will be with ?
+    //while creating reference(FK) objects must not be Nullable
+    //these all attributes together called as object
+    //the method itself will extract the mitarbeiter_id from object
+    
     public function setMitarbeiterId(?Mitarbeiter $mitarbeiter_id): self
     {
         $this->mitarbeiter_id = $mitarbeiter_id;
-
+        //function's return type self means it gives entire object of class Attendance(includes all attributes) 
         return $this;
     }
 
@@ -112,6 +105,18 @@ class Attendence
                 $timesheet->setAtendanceId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
